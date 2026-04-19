@@ -2,6 +2,8 @@ const PROGRESS_KEY = "pv-flashcard-progress";
 const ORDER_KEY = "pv-flashcard-order";
 const STAGE_KEY = "pv-flashcard-stage";
 const WRITING_KEY = "pv-flashcard-writing";
+const AUDIO_CACHE_VERSION = "20260419-stage2-audio-final";
+const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
 const MINUTE = 60 * 1000;
 const DAY = 24 * 60 * 60 * 1000;
@@ -72,6 +74,56 @@ const CARD_HINTS = {
   "stage1:48": ["request", "ask somebody for"],
   "stage1:49": ["be quiet", "stop talking"],
   "stage1:50": ["discard", "get rid of"],
+  "stage2:51": ["freshen yourself up", "get cleaned up quickly"],
+  "stage2:52": ["register on arrival", "complete arrival procedures"],
+  "stage2:53": ["leave the hotel officially", "complete departure procedures"],
+  "stage2:54": ["choose carefully", "select from several options"],
+  "stage2:55": ["meet socially", "spend time together"],
+  "stage2:56": ["experience", "live through something difficult"],
+  "stage2:57": ["place on a surface", "set something down"],
+  "stage2:58": ["test the fit", "put on to see if it fits"],
+  "stage2:59": ["wait a moment", "hold still for a second"],
+  "stage2:60": ["distribute", "hand out to many people"],
+  "stage2:61": ["collect", "get something on the way"],
+  "stage2:62": ["lose balance", "topple over"],
+  "stage2:63": ["wake up", "rise from bed"],
+  "stage2:64": ["use up completely", "have none left"],
+  "stage2:65": ["leave suddenly", "storm out"],
+  "stage2:66": ["reach the same level", "make up lost ground"],
+  "stage2:67": ["exercise", "do physical training"],
+  "stage2:68": ["go back", "return toward where you came from"],
+  "stage2:69": ["pursue actively", "try hard to get"],
+  "stage2:70": ["rise to your feet", "get out of your chair"],
+  "stage2:71": ["talk louder", "raise your voice"],
+  "stage2:72": ["pass to another person", "relay onward"],
+  "stage2:73": ["join us", "come with us"],
+  "stage2:74": ["happen unexpectedly", "appear suddenly as an issue"],
+  "stage2:75": ["be very noticeable", "be easy to spot"],
+  "stage2:76": ["go to someone's place", "visit another person's home"],
+  "stage2:77": ["go toward", "make your way to"],
+  "stage2:78": ["browse the area", "check the place out"],
+  "stage2:79": ["survive successfully", "finish despite difficulty"],
+  "stage2:80": ["submit", "hand in officially"],
+  "stage2:81": ["have a good relationship", "be on good terms"],
+  "stage2:82": ["mess around", "play instead of being serious"],
+  "stage2:83": ["return something", "give back to the owner"],
+  "stage2:84": ["discover", "learn by checking"],
+  "stage2:85": ["boast", "display proudly"],
+  "stage2:86": ["return a phone call", "call again later"],
+  "stage2:87": ["start sounding", "be triggered"],
+  "stage2:88": ["match well", "fit stylistically"],
+  "stage2:89": ["remain together", "continue the relationship"],
+  "stage2:90": ["move around easily", "travel from place to place"],
+  "stage2:91": ["have the chance to", "be able to do at last"],
+  "stage2:92": ["pay close attention", "listen carefully now"],
+  "stage2:93": ["fail to show up for a date", "leave someone waiting"],
+  "stage2:94": ["say goodbye at departure", "go with someone when they leave"],
+  "stage2:95": ["meet informally", "get together in person"],
+  "stage2:96": ["remember and reflect on", "think back about"],
+  "stage2:97": ["stop functioning", "lose strength completely"],
+  "stage2:98": ["cover the cost of", "be the one who pays"],
+  "stage2:99": ["install", "fix in position"],
+  "stage2:100": ["spend time casually together", "chill together"],
 };
 
 const CARD_EXAMPLES = {
@@ -125,54 +177,54 @@ const CARD_EXAMPLES = {
   "stage1:48": ["I need to ask for some extra time.", "She asked for directions at the station.", "He never asks for help unless he really needs it."],
   "stage1:49": ["He told his brother to shut up during the movie.", "Someone in the crowd yelled at the man to shut up.", "I was about to complain, but I shut up instead."],
   "stage1:50": ["Throw away those old magazines.", "He threw away the receipt by mistake.", "Please throw away any spoiled food."],
-  "stage2:51": ["I need a few minutes to freshen up before dinner.", "She freshened up and changed into a clean shirt.", "Why don't you freshen up after the long flight?"],
-  "stage2:52": ["We checked in at the hotel around three.", "Did you already check in for your flight?", "Let's check in before we grab lunch."],
+  "stage2:51": ["I need a few minutes to freshen up before dinner.", "She freshened up and changed into a clean shirt.", "Why don't you freshen up after your long flight?"],
+  "stage2:52": ["We checked in at the hotel around three o'clock.", "Did you already check in for your flight?", "Let's check in before we grab lunch."],
   "stage2:53": ["We have to check out by eleven tomorrow.", "She checked out of the hotel early this morning.", "Don't forget to check out at the front desk."],
   "stage2:54": ["Can you help me pick out a gift for my sister?", "She picked out a blue dress for the party.", "It took him forever to pick out a new phone."],
   "stage2:55": ["Let's get together sometime next week.", "Our family gets together every New Year's Day.", "We got together for coffee after class."],
-  "stage2:56": ["He's going through a difficult breakup right now.", "We all go through stressful times sometimes.", "She went through a lot last year."],
+  "stage2:56": ["He's going through a tough breakup right now.", "We all go through stressful times sometimes.", "She went through a lot last year."],
   "stage2:57": ["Please put down your phone during dinner.", "He put down the box by the door.", "You can put your bags down over there."],
-  "stage2:58": ["I'd like to try on these boots, please.", "She tried on three jackets before choosing one.", "Why don't you try the sweater on first?"],
-  "stage2:59": ["Hold on, I can't find my wallet.", "Can you hold on for just a second?", "She told me to hold on while she checked."],
+  "stage2:58": ["I'd like to try on these boots, please.", "She tried on three jackets before choosing one.", "Why don't you try on the sweater first?"],
+  "stage2:59": ["Hold on, I can't find my wallet.", "Can you hold on for a second?", "She told me to hold on while she checked."],
   "stage2:60": ["The teacher gave out the worksheets quickly.", "They were giving out free samples at the station.", "I'll give out the name tags before the event starts."],
   "stage2:61": ["Can you pick up some milk on your way home?", "I picked up my package after work.", "She'll pick up the kids at five."],
-  "stage2:62": ["Be careful or you'll fall over.", "The chair almost fell over in the wind.", "He slipped on the ice and fell over."],
+  "stage2:62": ["Be careful, or you'll fall over.", "The chair almost fell over in the wind.", "He slipped on the ice and fell over."],
   "stage2:63": ["I usually get up at six on weekdays.", "She got up quietly so she wouldn't wake the baby.", "It's hard to get up on rainy mornings."],
   "stage2:64": ["We've run out of paper for the printer.", "They ran out of gas in the middle of nowhere.", "I need to buy rice because we're running out of it."],
   "stage2:65": ["He walked out before the movie ended.", "I couldn't believe she just walked out like that.", "The customer got angry and walked out of the store."],
   "stage2:66": ["I need the weekend to catch up on sleep.", "She studied hard to catch up with the rest of the class.", "Let's catch up over lunch sometime."],
-  "stage2:67": ["I work out three times a week.", "She's been working out at a new gym lately.", "He started to work out again after summer."],
+  "stage2:67": ["I work out three times a week.", "She's been working out at a new gym lately.", "He started working out again after the summer."],
   "stage2:68": ["We had to turn back because of the rain.", "The hikers turned back before it got dark.", "If we miss the exit, we'll have to turn back."],
-  "stage2:69": ["You should go after the job if you really want it.", "She went after her goal with confidence.", "He's finally ready to go after a bigger dream."],
+  "stage2:69": ["You should go after that job if you really want it.", "She went after her goal with confidence.", "He's finally ready to go after a bigger dream."],
   "stage2:70": ["Please stand up when your name is called.", "He stood up to stretch his legs.", "Could you stand up for a moment?"],
-  "stage2:71": ["You need to speak up in the back row.", "She spoke up when she heard something unfair.", "Please speak up so everyone can hear you."],
+  "stage2:71": ["You need to speak up so the people in the back can hear you.", "She spoke up when she saw something unfair.", "Please speak up so everyone can hear you."],
   "stage2:72": ["Can you pass on the message to Mia?", "He passed the letter on to his manager.", "I'll pass on your thanks to the team."],
   "stage2:73": ["You can come along if you want.", "My little brother came along to the park.", "Why don't you come along with us tonight?"],
   "stage2:74": ["Sorry, something came up at work.", "If anything comes up, call me right away.", "A family issue came up, so she had to leave."],
   "stage2:75": ["Her bright red coat really stands out.", "One student stood out from the rest.", "This design stands out in a good way."],
-  "stage2:76": ["We're going over to Ken's house after dinner.", "Do you want to go over to their place tomorrow?", "I went over to my neighbor's to return a dish."],
+  "stage2:76": ["We're going over to Ken's place after dinner.", "Do you want to go over to their place tomorrow?", "I went over to my neighbor's to return a dish."],
   "stage2:77": ["We're heading to Osaka tomorrow morning.", "She headed to the station right after class.", "Let's head to the food court first."],
   "stage2:78": ["We looked around the market for souvenirs.", "Feel free to look around while you wait.", "They spent the afternoon looking around town."],
   "stage2:79": ["You'll get through this busy week somehow.", "We got through the presentation without any problems.", "She finally got through all her homework."],
   "stage2:80": ["Make sure you turn in your worksheet before lunch.", "He turned in his keys at the front desk.", "I forgot to turn in my essay yesterday."],
   "stage2:81": ["Do you get along with your new roommate?", "My cousins get along really well.", "She gets along with almost everyone at work."],
   "stage2:82": ["The boys were fooling around in the hallway.", "Stop fooling around and finish your homework.", "They spent the afternoon fooling around by the river."],
-  "stage2:83": ["Please give back the book when you're done.", "She gave the pen back to me after class.", "When will you give back my charger?"],
+  "stage2:83": ["Please give back the book when you're done.", "She gave the pen back to me after class.", "When are you going to give back my charger?"],
   "stage2:84": ["I'll find out what time the movie starts.", "She found out the truth last night.", "Can you find out if he's available tomorrow?"],
   "stage2:85": ["He loves to show off his cooking skills.", "She showed off her new sneakers to everyone.", "Stop showing off and just play the game."],
   "stage2:86": ["I'll call you back after the meeting.", "She called back as soon as she saw the missed call.", "Can you call the customer back this afternoon?"],
   "stage2:87": ["My alarm goes off at six every day.", "A car alarm went off outside our window.", "The smoke detector went off while I was cooking."],
-  "stage2:88": ["This jacket goes with almost everything.", "Do these shoes go with my dress?", "I think the soup goes well with bread."],
+  "stage2:88": ["This jacket goes with almost everything.", "Do these shoes go with my dress?", "I think this soup goes well with bread."],
   "stage2:89": ["They stayed together for many years.", "I hope the group can stay together until the end.", "My grandparents stayed together through hard times."],
-  "stage2:90": ["I usually get around by bike.", "It's easy to get around the city by train.", "How do tourists get around here?"],
+  "stage2:90": ["I usually get around on my bike.", "It's easy to get around the city by train.", "How do tourists usually get around here?"],
   "stage2:91": ["I finally get to relax this weekend.", "She got to meet the author in person.", "We didn't get to finish the game."],
-  "stage2:92": ["Listen up, everyone, class is starting.", "You should listen up when your coach is talking.", "The kids listened up as soon as the teacher raised her voice."],
+  "stage2:92": ["Listen up, everyone. Class is starting.", "You need to listen up when your coach is talking.", "Everyone listened up when the teacher started speaking."],
   "stage2:93": ["He stood me up again last night.", "I can't believe she stood him up on his birthday.", "No one wants to get stood up on a first date."],
   "stage2:94": ["We went to the station to see her off.", "His friends saw him off at the airport.", "I'll come see you off before your flight."],
   "stage2:95": ["Let's meet up after school.", "We met up for brunch on Sunday.", "Are you free to meet up later today?"],
   "stage2:96": ["I like to look back on old photos sometimes.", "She looked back on her school days with a smile.", "When we look back on this trip, we'll laugh."],
   "stage2:97": ["My legs gave out near the end of the race.", "The old chair finally gave out.", "His voice gave out during the speech."],
-  "stage2:98": ["Don't worry, I'll pay for lunch today.", "She paid for the tickets online.", "Who is going to pay for the repairs?"],
+  "stage2:98": ["Don't worry, I'll pay for lunch today.", "She paid for the tickets online.", "Who's going to pay for the repairs?"],
   "stage2:99": ["Can you help me put up these curtains?", "They put up a sign in front of the store.", "We're putting up shelves in the bedroom this weekend."],
   "stage2:100": ["We hung out at the park all afternoon.", "Do you want to hang out after work?", "They usually hang out at that cafe on weekends."]
 };
@@ -210,6 +262,7 @@ const els = {
   writingBtn: document.getElementById("writing-btn"),
   writingPanel: document.getElementById("writing-panel"),
   writingInput: document.getElementById("writing-input"),
+  writingMicBtn: document.getElementById("writing-mic-btn"),
   writingCopyBtn: document.getElementById("writing-copy-btn"),
   writingShareBtn: document.getElementById("writing-share-btn"),
   audioPlayer: document.getElementById("audio-player"),
@@ -238,6 +291,8 @@ const state = {
   isBack: false,
   viewMode: "study",
   listSearch: "",
+  speechRecognition: null,
+  isListening: false,
 };
 
 function loadProgress() {
@@ -305,6 +360,69 @@ function getWritingDraft(card) {
 function setWritingDraft(card, text) {
   state.writingDrafts[getCardKey(card)] = text;
   saveWritingDrafts();
+}
+
+function updateMicButton() {
+  if (!els.writingMicBtn) return;
+  const supported = Boolean(SpeechRecognitionClass);
+  els.writingMicBtn.classList.toggle("is-hidden", !supported);
+  els.writingMicBtn.textContent = state.isListening ? "⏹" : "🎤";
+  els.writingMicBtn.setAttribute("aria-label", state.isListening ? "Stop voice input" : "Start voice input");
+}
+
+function stopVoiceInput() {
+  if (!state.speechRecognition || !state.isListening) return;
+  state.isListening = false;
+  state.speechRecognition.stop();
+  updateMicButton();
+}
+
+function ensureSpeechRecognition() {
+  if (!SpeechRecognitionClass) return null;
+  if (state.speechRecognition) return state.speechRecognition;
+
+  const recognition = new SpeechRecognitionClass();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = false;
+
+  recognition.addEventListener("result", (event) => {
+    let transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; i += 1) {
+      transcript += event.results[i][0].transcript;
+    }
+    const baseText = els.writingInput.dataset.baseText || "";
+    const nextText = [baseText, transcript.trim()].filter(Boolean).join(baseText ? " " : "");
+    els.writingInput.value = nextText;
+    if (state.currentCard) {
+      setWritingDraft(state.currentCard, nextText);
+    }
+  });
+
+  recognition.addEventListener("end", () => {
+    state.isListening = false;
+    delete els.writingInput.dataset.baseText;
+    updateMicButton();
+  });
+
+  recognition.addEventListener("error", () => {
+    state.isListening = false;
+    delete els.writingInput.dataset.baseText;
+    updateMicButton();
+  });
+
+  state.speechRecognition = recognition;
+  return recognition;
+}
+
+function startVoiceInput() {
+  const recognition = ensureSpeechRecognition();
+  if (!recognition) return;
+
+  els.writingInput.dataset.baseText = els.writingInput.value.trim();
+  state.isListening = true;
+  updateMicButton();
+  recognition.start();
 }
 
 function getCardHints(stageId, card) {
@@ -403,7 +521,10 @@ function buildFrontText(frontText, answer) {
 
 function buildSolvedText(frontText, answer, solvedText = "") {
   if (solvedText) return solvedText;
-  return frontText.replace(/(?:____\s*)+/g, `<span class="filled">${answer}</span>`);
+  return frontText.replace(
+    /(?:____\s*)+/g,
+    (match) => `<span class="filled">${answer}</span>${/\s$/.test(match) ? " " : ""}`
+  );
 }
 
 function buildSolvedPlainText(frontText, answer, solvedText = "") {
@@ -678,7 +799,7 @@ function renderList() {
     `;
 
     item.querySelector(".list-audio").addEventListener("click", () => {
-      els.audioPlayer.src = card.audio;
+      setAudioSource(card.audio);
       playAudio();
     });
 
@@ -777,6 +898,7 @@ function render() {
   els.translationText.textContent = card.translation || "日本語訳は未設定です。";
   els.explanationText.textContent = card.explanation || "解説は未設定です。";
   els.writingInput.value = getWritingDraft(card);
+  updateMicButton();
   setAudioSource(card.audio);
   els.card.classList.toggle("is-back", state.isBack);
   els.card.classList.toggle("is-front", !state.isBack);
@@ -816,7 +938,9 @@ function setBack() {
 }
 
 function setAudioSource(src) {
-  const resolvedSrc = new URL(src, window.location.href).href;
+  const resolvedUrl = new URL(src, window.location.href);
+  resolvedUrl.searchParams.set("v", AUDIO_CACHE_VERSION);
+  const resolvedSrc = resolvedUrl.href;
   if (els.audioPlayer.src === resolvedSrc) return;
   els.audioPlayer.src = resolvedSrc;
 }
@@ -832,6 +956,10 @@ function playAudio() {
       els.audioPlayer.addEventListener("canplay", retry, { once: true });
     });
   }
+}
+
+function buildWritingReviewPrompt(text) {
+  return `${text}\n\nこの英文が自然な表現か確認してください。自然で問題なければ「OK」とだけ返してください。より自然な表現があれば、添削した英文とその理由を日本語で教えてください。`;
 }
 
 function scheduleCurrent(grade) {
@@ -925,6 +1053,19 @@ els.writingInput.addEventListener("input", () => {
   setWritingDraft(state.currentCard, els.writingInput.value);
 });
 
+if (SpeechRecognitionClass) {
+  updateMicButton();
+}
+
+els.writingMicBtn?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (state.isListening) {
+    stopVoiceInput();
+    return;
+  }
+  startVoiceInput();
+});
+
 els.writingCopyBtn.addEventListener("click", async (event) => {
   event.stopPropagation();
   const text = els.writingInput.value.trim();
@@ -940,8 +1081,9 @@ els.writingCopyBtn.addEventListener("click", async (event) => {
 
 els.writingShareBtn.addEventListener("click", async (event) => {
   event.stopPropagation();
-  const text = els.writingInput.value.trim();
-  if (!text) return;
+  const rawText = els.writingInput.value.trim();
+  if (!rawText) return;
+  const text = buildWritingReviewPrompt(rawText);
 
   if (navigator.share) {
     try {

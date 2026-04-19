@@ -604,6 +604,7 @@ window.APP_DATA = {
           audio: "./assets/stage2-audio/59_hold_on.m4a",
           frontText: "____ ____, I'm not ready yet!",
           answer: "hold on",
+          solvedText: "Hold on, I'm not ready yet!",
           backText: "hold on",
           translation: "ちょっと待って、まだ準備できてない！",
           explanation: "hold on は「ちょっと待つ」。短い間待ってほしい時の口語表現。",
