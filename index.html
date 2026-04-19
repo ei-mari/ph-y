@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phrasal Verb Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-stage">
+      <div class="phone-shell">
+        <div class="phone-camera"></div>
+        <section class="screen">
+          <div class="screen-scroll">
+            <div class="app-shell">
+              <header class="topbar">
+                <div class="topbar-main">
+                  <p class="eyebrow">Phrasal Verb Trainer</p>
+                  <h1 id="deck-name">Essential Verbs 400</h1>
+                </div>
+                <div class="topbar-meta">
+                  <label class="mode-field stage-field">
+                    <span class="sr-only">Stage</span>
+                    <select id="stage-select"></select>
+                  </label>
+                  <span id="progress-text" class="meta-pill">1 / 50</span>
+                  <div class="order-switch" role="tablist" aria-label="Study Order">
+                    <button id="order-normal-btn" class="order-btn is-active" type="button">Normal</button>
+                    <button id="order-random-btn" class="order-btn" type="button">Random</button>
+                  </div>
+                </div>
+              </header>
+
+              <main class="stage">
+                <div id="study-view" class="card-wrap">
+                  <article id="card" class="card is-front" aria-live="polite">
+                    <section class="card-face card-front">
+                      <div class="image-frame">
+                        <img id="card-image" alt="" />
+                      </div>
+                      <p id="front-text" class="sentence"></p>
+                      <div class="front-actions">
+                        <button id="hint-btn" class="ghost detail-btn" type="button">Hint</button>
+                        <button id="answer-btn" class="ghost detail-btn" type="button">Answer</button>
+                      </div>
+                      <div id="hint-panel" class="detail-panel hint-panel is-hidden">
+                        <p class="detail-label">Hint</p>
+                        <div id="hint-text" class="detail-text"></div>
+                      </div>
+                    </section>
+
+                    <section class="card-face card-back">
+                      <div class="image-frame back-image-frame">
+                        <img id="back-card-image" alt="" />
+                      </div>
+                      <div class="answer-block">
+                        <p id="back-text" class="sentence sentence-back"></p>
+                        <div class="answer-audio-row">
+                          <button id="audio-btn" class="ghost detail-btn icon-btn" type="button" aria-label="Play Audio Again">🎧</button>
+                          <button id="writing-btn" class="ghost detail-btn icon-btn" type="button" aria-label="Open Self Writing">✍️</button>
+                        </div>
+                      </div>
+                      <div id="writing-panel" class="writing-panel is-hidden">
+                        <p class="writing-label">Self Writing</p>
+                        <p class="writing-helper">Write a sentence using the phrasal verb you just learned.</p>
+                        <textarea
+                          id="writing-input"
+                          class="writing-input"
+                          placeholder="Write your own sentence here..."
+                        ></textarea>
+                        <div class="writing-actions">
+                          <button id="writing-copy-btn" class="ghost writing-action-btn" type="button">Copy</button>
+                          <button id="writing-share-btn" class="ghost writing-action-btn" type="button">Share</button>
+                        </div>
+                      </div>
+                      <div class="detail-stack">
+                        <div class="accordion-tabs">
+                          <button id="translation-btn" class="accordion-toggle" type="button">日本語訳</button>
+                          <button id="explanation-btn" class="accordion-toggle" type="button">解説</button>
+                          <button id="examples-btn" class="accordion-toggle" type="button">例文</button>
+                        </div>
+                        <div id="translation-panel" class="detail-panel accordion-panel is-hidden">
+                          <p id="translation-text" class="detail-text"></p>
+                        </div>
+                        <div id="explanation-panel" class="detail-panel accordion-panel is-hidden">
+                          <p id="explanation-text" class="detail-text"></p>
+                        </div>
+                        <div id="examples-panel" class="detail-panel accordion-panel is-hidden">
+                          <div id="examples-text" class="detail-text"></div>
+                        </div>
+                      </div>
+                      <div class="review-actions">
+                        <button id="again-btn" class="review-btn review-again" type="button">
+                          <span class="review-name">Again</span>
+                          <small id="again-time" class="review-time">in 0 mins</small>
+                        </button>
+                        <button id="good-btn" class="review-btn review-good" type="button">
+                          <span class="review-name">Normal</span>
+                          <small id="good-time" class="review-time">in 10 mins</small>
+                        </button>
+                        <button id="easy-btn" class="review-btn review-easy" type="button">
+                          <span class="review-name">Easy</span>
+                          <small id="easy-time" class="review-time">in 4 days</small>
+                        </button>
+                      </div>
+                    </section>
+                  </article>
+                </div>
+                <section id="list-view" class="list-view is-hidden" aria-live="polite">
+                  <div class="list-toolbar">
+                    <div class="list-search-panel">
+                      <input id="list-search" class="list-search" type="search" placeholder="Search phrasal verb or example" />
+                    </div>
+                  </div>
+                  <div id="list-grid" class="list-grid"></div>
+                </section>
+              </main>
+            </div>
+          </div>
+        </section>
+        <nav class="bottom-nav" role="tablist" aria-label="View Mode">
+          <button id="study-mode-btn" class="bottom-nav-btn is-active" type="button">Study</button>
+          <button id="list-mode-btn" class="bottom-nav-btn" type="button">List</button>
+        </nav>
+      </div>
+    </div>
+
+    <audio id="audio-player" preload="none"></audio>
+
+    <script src="./data/cards.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
