@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phrasal Verb Trainer</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-main">
+          <p class="eyebrow">Phrasal Verb Trainer</p>
+          <h1 id="deck-name">Essential Verbs 400</h1>
+        </div>
+        <div class="topbar-meta">
+          <div class="mode-switch" role="tablist" aria-label="View Mode">
+            <button id="study-mode-btn" class="mode-btn is-active" type="button">Study</button>
+            <button id="list-mode-btn" class="mode-btn" type="button">List</button>
+          </div>
+          <label class="mode-field stage-field">
+            <span class="sr-only">Stage</span>
+            <select id="stage-select"></select>
+          </label>
+          <span id="progress-text" class="meta-pill">1 / 50</span>
+          <label class="mode-field">
+            <span class="sr-only">Study Order</span>
+            <select id="order-mode">
+              <option value="review">Review</option>
+              <option value="random">Random</option>
+            </select>
+          </label>
+          <button id="reset-progress-btn" class="ghost compact" type="button">Reset</button>
+        </div>
+      </header>
+
+      <main class="stage">
+        <div id="study-view" class="card-wrap">
+          <article id="card" class="card is-front" aria-live="polite">
+            <section class="card-face card-front">
+              <div class="image-frame">
+                <img id="card-image" alt="" />
+              </div>
+              <p id="front-text" class="sentence"></p>
+              <p class="tap-hint">Tap anywhere to reveal</p>
+            </section>
+
+            <section class="card-face card-back">
+              <div class="image-frame back-image-frame">
+                <img id="back-card-image" alt="" />
+              </div>
+              <div class="answer-block">
+                <p id="back-text" class="sentence sentence-back"></p>
+                <div class="detail-actions">
+                  <button id="audio-btn" class="ghost detail-btn icon-btn" type="button" aria-label="Play Audio Again">🎧</button>
+                  <button id="translation-btn" class="ghost detail-btn" type="button">日本語訳</button>
+                  <button id="explanation-btn" class="ghost detail-btn" type="button">解説</button>
+                </div>
+                <div id="translation-panel" class="detail-panel is-hidden">
+                  <p class="detail-label">日本語訳</p>
+                  <p id="translation-text" class="detail-text"></p>
+                </div>
+                <div id="explanation-panel" class="detail-panel is-hidden">
+                  <p class="detail-label">解説</p>
+                  <p id="explanation-text" class="detail-text"></p>
+                </div>
+              </div>
+              <div class="review-actions">
+                <button id="again-btn" class="review-btn review-again" type="button">
+                  <span class="review-name">Again</span>
+                  <small id="again-time" class="review-time">0分後に再表示</small>
+                </button>
+                <button id="good-btn" class="review-btn review-good" type="button">
+                  <span class="review-name">Normal</span>
+                  <small id="good-time" class="review-time">10分後に表示</small>
+                </button>
+                <button id="easy-btn" class="review-btn review-easy" type="button">
+                  <span class="review-name">Easy</span>
+                  <small id="easy-time" class="review-time">4日後に表示</small>
+                </button>
+              </div>
+            </section>
+          </article>
+        </div>
+
+        <section id="list-view" class="list-view is-hidden" aria-live="polite">
+          <div class="list-toolbar">
+            <div class="list-search-panel">
+              <input id="list-search" class="list-search" type="search" placeholder="Search phrasal verb or example" />
+            </div>
+          </div>
+          <div id="list-grid" class="list-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <audio id="audio-player" preload="none"></audio>
+
+    <script src="./data/cards.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
